@@ -63,7 +63,7 @@ function Predict() {
         datasets: [
             {
                 label: 'Personality Traits',
-                data: [1, 2, 0, 1, 2, 1, 0, 2],
+                data:predictions,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)', // Slightly transparent pink
                 borderColor: 'rgba(255, 99, 132, 1)', // Solid pink
                 borderWidth: 2,
@@ -92,11 +92,10 @@ function Predict() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data)
-            const { predictions, raw_features, file_path } = response.data;
-            setPredictions(predictions);
-            setFeatures(raw_features);
-            setImageSource(`http://localhost:5000/static/${file_path}`);
+            console.log("response data---",response.data)
+            setPredictions(Object.values(response.data));
+            // setFeatures(raw_features);
+            // setImageSource(`http://localhost:5000/static/${file_path}`);
             setLoading(false)
         } catch (error) {
             console.error("There was an error uploading the file!", error);
@@ -104,9 +103,7 @@ function Predict() {
         }
     }
 
-    useEffect(() => {
-        console.log(predictions)
-    }, [predictions]);
+
 
     return (
         <div className="flex justify-between">
@@ -148,9 +145,9 @@ function Predict() {
                         Loading
                     </button>
                 ) : (
-                  // <Radar data={data} options={options} />
+                  <Radar data={data} options={options} />
                   //   <ClassificationReport />
-                    <></>
+
                 )}
 
             </div>

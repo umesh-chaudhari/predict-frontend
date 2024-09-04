@@ -16,6 +16,7 @@ function Predict() {
     const [loading, setLoading] = useState(false);
     const [predictions, setPredictions] = useState([]);
     const [features, setFeatures] = useState([]);
+    const [toggle, setToggle] = useState(false)
     const options = {
         scales: {
             r: {
@@ -28,7 +29,7 @@ function Predict() {
                     color: 'rgba(255, 255, 255, 0.2)', // Lighten the angle lines
                 },
                 ticks: {
-                    color: '#fff', // Make the ticks white for visibility
+                    color: '#000506', // Make the ticks white for visibility
                     stepSize: 1,
                     callback: function (value) {
                         const levels = ["Low", "Medium", "High"];
@@ -64,10 +65,10 @@ function Predict() {
             {
                 label: 'Personality Traits',
                 data:predictions,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Slightly transparent pink
-                borderColor: 'rgba(255, 99, 132, 1)', // Solid pink
+                backgroundColor: 'rgba(0, 181, 255, 0.1)', // Slightly transparent pink
+                borderColor: 'rgba(0, 181, 255, 0.5)', // Solid pink
                 borderWidth: 2,
-                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointBackgroundColor: 'rgba(0, 181, 255, 1)',
                 pointBorderColor: '#fff',
             },
         ],
@@ -78,6 +79,8 @@ function Predict() {
     const levels = ["Good", "Better", "Best"];
 
     function handleImage(event) {
+        const imagePreview = URL.createObjectURL(event.target.files[0])
+        setImageSource(imagePreview)
         setImage(event.target.files[0])
     }
 
@@ -92,9 +95,10 @@ function Predict() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log("response data---",response.data)
-            setPredictions(Object.values(response.data));
-            // setFeatures(raw_features);
+            console.log("response data---",response.data[1])
+            setPredictions(response.data[0]);
+            setFeatures(response.data[1]);
+            console.log("")
             // setImageSource(`http://localhost:5000/static/${file_path}`);
             setLoading(false)
         } catch (error) {
@@ -135,6 +139,9 @@ function Predict() {
                 <button className="btn btn-primary" onClick={decode}>
                     Decode my Personality
                 </button>
+                <button className="btn btn-accent" onClick={() => {
+                    setToggle(!toggle)
+                }}>Toggle</button>
 
             </div>
 
@@ -145,11 +152,24 @@ function Predict() {
                         Loading
                     </button>
                 ) : (
-                  <Radar data={data} options={options} />
-                  //   <ClassificationReport />
+                    <div className="w-[900px] flex justify-center">
+                        {toggle?(
+                        <Radar data={data} options={options} />
+                            ):(
+                            <div>
+                                <ul>
+                                    {traitNames.map((item, index) => (
+                                        <li className="text-3xl text-start flex gap-3" key={index}>{item}:<h4 className="text-3xl font-bold">{levels[predictions[index]]}</h4></li>
+                                    ))
+                                    }
+                                </ul>
+                            </div>
+                        )
+                        }
+
+                    </div>
 
                 )}
-
             </div>
         </div>
     );

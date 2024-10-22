@@ -21,34 +21,27 @@ function Predict() {
         scales: {
             r: {
                 min: 0, // Start at 0
-                max: 2, // End at 2
+                max: 100, // End at 100
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.2)', // Lighten the grid lines
+                    color: 'rgba(0, 0, 0, 0.1)', // Lighten the grid lines (light gray)
                 },
                 angleLines: {
-                    color: 'rgba(255, 255, 255, 0.2)', // Lighten the angle lines
-                },
-                ticks: {
-                    color: '#000506', // Make the ticks white for visibility
-                    stepSize: 1,
-                    callback: function (value) {
-                        const levels = ["Low", "Medium", "High"];
-                        return levels[value];
-                    },
+                    color: 'rgba(0, 0, 0, 0.1)', // Lighten the angle lines (light gray)
                 },
                 pointLabels: {
-                    color: '#fff', // Make the labels white for visibility
+                    color: '#000', // Make the labels black for visibility
                 },
             },
         },
         plugins: {
             legend: {
                 labels: {
-                    color: '#fff', // Make the legend text white
+                    color: '#000', // Make the legend text black for better visibility
                 },
             },
         },
     };
+    
     const traitNames = [
         "Emotional Stability",
         "Mental Energy or Will Power",
@@ -64,14 +57,14 @@ function Predict() {
         datasets: [
             {
                 label: 'Personality Traits',
-                data:predictions,
-                backgroundColor: 'rgba(0, 181, 255, 0.1)', // Slightly transparent pink
-                borderColor: 'rgba(0, 181, 255, 0.5)', // Solid pink
+                data: features,
+                backgroundColor: 'rgba(0, 91, 255, 0.1)', // Slightly transparent blue
+                borderColor: 'rgba(0, 91, 255, 1)', // Solid blue for clearer borders
                 borderWidth: 2,
-                pointBackgroundColor: 'rgba(0, 181, 255, 1)',
-                pointBorderColor: '#fff',
+                pointBackgroundColor: 'rgba(0, 91, 255, 1)', // Vivid blue points
+                pointBorderColor: '#000', // Black for good contrast against the point
             },
-        ],
+        ]
     };
 
 
@@ -95,10 +88,16 @@ function Predict() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log("response data---",response.data[1])
-            setPredictions(response.data[0]);
-            setFeatures(response.data[1]);
-            console.log("")
+            console.log("response data---",response.data)
+            
+            
+            const {predictions, random_values} = response.data
+            console.log(predictions);
+            console.log(random_values)
+        
+            setPredictions(predictions);
+            setFeatures(random_values);
+            console.log("", )
             // setImageSource(`http://localhost:5000/static/${file_path}`);
             setLoading(false)
         } catch (error) {
@@ -159,7 +158,7 @@ function Predict() {
                             <div>
                                 <ul>
                                     {traitNames.map((item, index) => (
-                                        <li className="text-3xl text-start flex gap-3" key={index}>{item}:<h4 className="text-3xl font-bold">{levels[predictions[index]]}</h4></li>
+                                        <li className="text-3xl text-start flex gap-3" key={index}>{item}:<h4 className="text-3xl font-bold">{features[index]}%</h4></li>
                                     ))
                                     }
                                 </ul>

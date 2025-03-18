@@ -30,6 +30,9 @@ function Predict() {
                 },
                 pointLabels: {
                     color: '#000', // Make the labels black for visibility
+                    font: {
+                        size: 16, // Increase font size for the labels
+                    },
                 },
             },
         },
@@ -41,15 +44,15 @@ function Predict() {
             },
         },
     };
-    
+
     const traitNames = [
         "Emotional Stability",
         "Mental Energy or Will Power",
         "Modesty",
         "Personal Harmony and Flexibility",
-        "Lack of Discipline",
-        "Poor Concentration",
-        "Non Communicativeness",
+        "Discipline",
+        "Concentration",
+        "Communicativeness",
         "Social Isolation"
     ];
     const data = {
@@ -98,6 +101,7 @@ function Predict() {
             setPredictions(predictions);
             setFeatures(random_values);
             console.log("", )
+            console.log("featu")
             // setImageSource(`http://localhost:5000/static/${file_path}`);
             setLoading(false)
         } catch (error) {
